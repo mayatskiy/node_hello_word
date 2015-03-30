@@ -36,20 +36,22 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shipit');
     grunt.loadNpmTasks('shipit-deploy');
 
-    var startStop = function (command, context){
+    var cdAndRunCommand = function (command, context){
         var done = context.async();
         var current = grunt.config('shipit.options.deployTo') + '/current';
-        command == 'start' ? command = 'start ./bin/www' : command = 'stopall';
-        grunt.shipit.remote('cd ' + current + ' && forever ' + command, done);
-
+        grunt.shipit.remote('cd ' + current + ' && ' + command, done);
     };
 
     grunt.registerTask('start', function () {
-        startStop('start', this);
+        cdAndRunCommand('forever start ./bin/www', this);
     });
 
     grunt.registerTask('stop', function () {
-        startStop('stop', this);
+        cdAndRunCommand('forever stopall', this);
+    });
+
+    grunt.registerTask('install', function () {
+        cdAndRunCommand('npm install', this);
     });
 
     grunt.shipit.on('fetched', function () {
@@ -57,6 +59,6 @@ module.exports = function (grunt) {
     });
 
     grunt.shipit.on('published', function () {
-        grunt.task.run(['start']);
+        grunt.task.run(['install', 'start']);
     });
 };
