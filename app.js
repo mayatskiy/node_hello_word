@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var mongo = require('mongoskin');
-var db = mongo.db("mongodb://192.168.101.173:27017/nodetest", {native_parser:true});
+var db = mongo.db(process.env.MONGOADDRESS, {native_parser:true});
 
 var app = express();
 
