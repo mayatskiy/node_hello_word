@@ -15,9 +15,12 @@
     "serve-favicon": "~2.2.0",
     "mongodb": "*",
     "monk": "*",
-
+    "forever": "*",
     "grunt": "*",
     "grunt-shipit": "*",
     "shipit-deploy": "*"
+  },
+  "devDependencies": {
+    "grunt-shipit": "^1.0.0"
   }
 }

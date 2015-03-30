@@ -36,10 +36,24 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shipit');
     grunt.loadNpmTasks('shipit-deploy');
 
-    grunt.registerTask('start', function () {
-        var done = this.async();
+    var startStop = function (command, context){
+        var done = context.async();
         var current = grunt.config('shipit.options.deployTo') + '/current';
-        grunt.shipit.remote('cd ' + current + ' && npm start', done);
+        command == 'start' ? command = 'start ./bin/www' : command = 'stopall';
+        grunt.shipit.remote('cd ' + current + ' && forever ' + command, done);
+
+    };
+
+    grunt.registerTask('start', function () {
+        startStop('start', this);
+    });
+
+    grunt.registerTask('stop', function () {
+        startStop('stop', this);
+    });
+
+    grunt.shipit.on('fetched', function () {
+        grunt.task.run(['stop']);
     });
 
     grunt.shipit.on('published', function () {
