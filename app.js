@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var mongo = require('mongoskin');
+var db = mongo.db("mongodb://172.31.36.150:27017/nodetest", {native_parser:true});
+
 var app = express();
 
 // view engine setup
@@ -21,6 +24,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Make our db accessible to our router
+app.use(function(req,res,next){
+  req.db = db;
+  next();
+});
 
 app.use('/', routes);
 app.use('/users', users);
